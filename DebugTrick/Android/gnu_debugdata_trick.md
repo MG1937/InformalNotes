@@ -35,3 +35,68 @@ readelf -Ws surfaceflinger.gnudebug | grep ackWindowInfosReceived
 
 可以利用这些信息编写脚本, 在IDA内恢复符号以协助分析.   
 https://gist.github.com/rpw/caf82a1b657011cadd7c8b8664f10204
+
+gnu_debugdata解析脚本
+```python
+import argparse
+import subprocess
+import re
+import os
+
+def main():
+    # 1. 获取命令行参数输入
+    parser = argparse.ArgumentParser(description="Extract and decompress .gnu_debugdata section from a library.")
+    parser.add_argument("lib", help="Path to the library file.")
+    args = parser.parse_args()
+    lib_path = args.lib
+
+    # 检查文件是否存在
+    if not os.path.isfile(lib_path):
+        print(f"Error: The file '{lib_path}' does not exist.")
+        return
+
+    # 2. 执行 objdump 获取 .gnu_debugdata 段信息
+    try:
+        result = subprocess.run(
+            ["objdump", "-h", lib_path],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+    except subprocess.CalledProcessError as e:
+        print(f"Error: Failed to execute objdump. {e}")
+        return
+
+    # 3. 解析输出，获取 offset 和 size
+    match = re.search(r'\.gnu_debugdata\s+([0-9a-fA-F]+)\s+[0-9a-fA-F]+\s+[0-9a-fA-F]+\s+([0-9a-fA-F]+)', result.stdout)
+    if not match:
+        print("Error: .gnu_debugdata section not found in the provided library.")
+        return
+
+    size = int(match.group(1), 16)
+    offset = int(match.group(2), 16)
+
+    # 4. 使用 dd 提取 .gnu_debugdata 段
+    output_file = f"{lib_path}.gnudata.xz"
+    try:
+        with open(output_file, 'wb') as out_f, open(lib_path, 'rb') as in_f:
+            in_f.seek(offset)
+            out_f.write(in_f.read(size))
+    except IOError as e:
+        print(f"Error: Failed to extract .gnu_debugdata section. {e}")
+        return
+
+    print(f"Extracted .gnu_debugdata to {output_file}")
+
+    # 5. 解压缩提取的文件
+    try:
+        subprocess.run(["xz", "-d", output_file], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error: Failed to decompress {output_file}. {e}")
+        return
+
+    print(f"Decompressed {output_file} to {output_file[:-3]}")
+
+if __name__ == "__main__":
+    main()
+```
