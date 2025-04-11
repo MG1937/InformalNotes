@@ -1,15 +1,14 @@
 # Windbg 通过 Export Table 遍历导出函数
 !dh命令列出指定映像的PE Header, 在输出的信息里找到Export Directory的RVA
 ```
-0:000>!dh KERNEL32.DLL
+0:000>!dh KERNELBASE.DLL
 ...
-    4160  DLL characteristics
-            High entropy VA supported
+    4140  DLL characteristics
             Dynamic base
             NX compatible
             Guard
-   9E700 [    E8F4] address [size] of Export Directory
-   ACFF4 [     7F8] address [size] of Import Directory
+  23F3D0 [    FA16] address [size] of Export Directory
+  254B70 [      3C] address [size] of Import Directory
 ...
 ```
 EAT(Export Address Table)对应结构为IMAGE_EXPORT_DIRECTORY.   
@@ -31,56 +30,78 @@ typedef struct _IMAGE_EXPORT_DIRECTORY {
 ```
 通过dd访问映像的EAT结构, 使用dd以每4字节显示内存, 方便访问结构体成员.
 ```
-0:000> dd 9E700+kernel32.dll
-00007ffa`240ae700  00000000 8c0b1418 00000000 000a286e
-00007ffa`240ae710  00000001 00000687 00000687 0009e728
-00007ffa`240ae720  000a0144 000a1b60 000a2893 000a28c9
-00007ffa`240ae730  00018c30 00014770 00021420 0005aa80
-00007ffa`240ae740  000045e0 00021130 00021140 000a2974
-00007ffa`240ae750  0003ccf0 0005aba0 0005ac00 0003ac50
-00007ffa`240ae760  00016f80 0003ac70 0001f730 0003ac90
-00007ffa`240ae770  000384c0 000a2aad 000a2aed 0004ad40
+0:000> dd kernelbase+23F3D0
+7541f3d0  00000000 8242574f 00000000 002441d2
+7541f3e0  00000001 000007c9 000007c9 0023f3f8
+7541f3f0  0024131c 00243240 001fd600 001d6890
+7541f400  00136dd0 00244237 0013bae0 0014ec00
+7541f410  00254b6c 00129a20 0021b6b0 0014e3c0
+7541f420  0021b750 0021b800 0021b880 0021b940
 ```
-EAT结构内8 * DWORD偏移是AddressOfFunctions的RVA, 此处为0009e728. 此RVA所在地址存储的是导出函数指针表, 表内指针与AddressOfNames内的函数名指针呈映射关系   
-9 * DWORD偏移存储AddressOfNames的RVA, 此处值为000a0144. 此RVA所在地址存储导出函数名的指针表, 与AddressOfFunctions呈映射关系.   
-导出函数表内条目的总量为0x00000687, 这值位于EAT结构偏移6 * DWORD处.
+EAT结构内8 * DWORD偏移是AddressOfFunctions的RVA, 此处为0023f3f8. 此RVA所在地址存储的是导出函数指针表, 表内指针与AddressOfNameOrdinals内的索引呈映射关系   
+9 * DWORD偏移存储AddressOfNames的RVA, 此处值为0024131c. 此RVA所在地址存储导出函数名的指针表, 与AddressOfNameOrdinals呈映射关系.   
+导出函数表内条目的总量为000007c9, 这值位于EAT结构偏移6 * DWORD处.
 列出AddressOfFunctions
 ```
-0:000> dd 0009e728+kernel32.dll
-00007ffa`240ae728  000a2893 000a28c9 00018c30 00014770
-00007ffa`240ae738  00021420 0005aa80 000045e0 00021130
-00007ffa`240ae748  00021140 000a2974 0003ccf0 0005aba0
-00007ffa`240ae758  0005ac00 0003ac50 00016f80 0003ac70
-00007ffa`240ae768  0001f730 0003ac90 000384c0 000a2aad
-00007ffa`240ae778  000a2aed 0004ad40 00020d80 0003acd0
-00007ffa`240ae788  0003acb0 000a2b80 000a2bbe 000a2c06
-00007ffa`240ae798  000a2c59 000a2cb1 000a2d05 000a2d59
+0:000> dd kernelbase+0023f3f8
+7541f3f8  001fd600 001d6890 00136dd0 00244237
+7541f408  0013bae0 0014ec00 00254b6c 00129a20
+7541f418  0021b6b0 0014e3c0 0021b750 0021b800
+7541f428  0021b880 0021b940 00244377 002443ad
+7541f438  001f4770 001510a0 0014e030 0021ba00
+7541f448  0021ba50 0021baa0 0021bae0 0021bb30
+7541f458  00150de0 0021bb80 0021bbc0 0021bc10
 ```
 列出AddressOfNames
 ```
-0:000> dd 000a0144+kernel32.dll
-00007ffa`240b0144  000a287b 000a28b4 000a28e7 000a28f6
-00007ffa`240b0154  000a290b 000a2930 000a2939 000a2942
-00007ffa`240b0164  000a2953 000a2964 000a29a9 000a29cf
-00007ffa`240b0174  000a29ee 000a2a0d 000a2a1a 000a2a2d
-00007ffa`240b0184  000a2a45 000a2a60 000a2a75 000a2a92
-00007ffa`240b0194  000a2ad1 000a2b12 000a2b25 000a2b32
-00007ffa`240b01a4  000a2b4c 000a2b6a 000a2ba1 000a2be6
-00007ffa`240b01b4  000a2c31 000a2c8c 000a2ce1 000a2d34
+0:000> dd kernelbase+0024131c
+7542131c  0024428f 0024429b 002442b5 002442c7
+7542132c  002442e7 00244303 00244335 0024435f
+7542133c  00244398 002443cb 002443dc 002443eb
+7542134c  002443ff 00244415 0024442f 00244442
+7542135c  00244457 00244470 00244477 00244489
+7542136c  0024449d 002444b5 002444c6 002444d7
+7542137c  002444fa 0024450a 0024451d 0024452d
+7542138c  00244542 0024454f 00244567 00244582
 ```
-在AddressOfNames内随机选取一个RVA指针, 此处选取000a2a2d, 处于AddressOfNames偏移16 * DWORD位置. 列出此指针内的函数名.   
+列出AddressOfNameOrdinals
 ```
-0:000> da 000a2a2d+kernel32.dll
-00007ffa`240b2a2d  "AddResourceAttributeAce"
+0:000> dw kernelbase+00243240
+75423240  0007 0008 0009 000a 000b 000c 000d 000e
+75423250  000f 0010 0011 0012 0013 0014 0015 0016
+75423260  0017 0018 0019 001a 001b 001c 001d 001e
+75423270  001f 0020 0021 0022 0023 0024 0025 0026
+75423280  0027 0028 0029 002a 002b 002c 002d 002f
+75423290  002e 0030 0031 0032 0033 0034 0035 0036
+754232a0  0037 0038 0039 003a 003b 003c 003d 003e
+754232b0  003f 0040 0041 0042 0043 0044 0045 0046
 ```
-可知其函数名为AddResourceAttributeAce, AddressOfFunctions偏移16 * DWORD位置为RVA指针0003ac70, 列出此位置下指令.
+在AddressOfNames内随机选取一个RVA指针, 此处选取0x416 * DWORD偏移处的指针, 列出此指针内的函数名.   
 ```
-0:000> u 0003ac70+kernel32.dll
-KERNEL32!AddResourceAttributeAceStub:
-00007ffa`2404ac70 48ff25d9ae0400  jmp     qword ptr [KERNEL32!_imp_AddResourceAttributeAce (00007ffa`24095b50)]
-00007ffa`2404ac77 cc              int     3
-00007ffa`2404ac78 cc              int     3
-00007ffa`2404ac79 cc              int     3
-```
-可见此RVA位置下的指令跳入KERNEL32的_imp_AddResourceAttributeAce函数, 显然此函数体内的指令与前文AddResourceAttributeAce函数名相对应. 证明其确实呈现映射关系.   
+0:000> dd kernelbase+0024131c+(0x416*4)
+75422374  0024a124 0024a131 0024a140 0024a14f
+...
+0:000> da kernelbase+0024a124
+7542a124  "LoadLibraryA"
 
+```
+可知其函数名为LoadLibraryA, AddressOfNameOrdinals偏移0x416 * WORD位置的索引为0x418, 根据此索引列出AddressOfFunctions中0x418 * DWORD位置的RVA指针.   
+可见其值为001510e0, 而根据此RVA反汇编所得到的偏移位置, 显然在LoadLibraryA接口的方法体内.
+```
+0:000> dw kernelbase+00243240+(2*0x416)
+75423a6c  0418 0419 041a 041b 041c 041d 041e 041f
+...
+0:000> dd kernelbase+0023f3f8+(4*0x418)
+75420458  001510e0 0012aec0 0012bec0 00151b10
+...
+0:000> u kernelbase+001510e0
+KERNELBASE!LoadLibraryA:
+753310e0 8bff            mov     edi,edi
+753310e2 55              push    ebp
+753310e3 8bec            mov     ebp,esp
+753310e5 51              push    ecx
+753310e6 837d0800        cmp     dword ptr [ebp+8],0
+753310ea 53              push    ebx
+753310eb 56              push    esi
+753310ec 7418            je      KERNELBASE!LoadLibraryA+0x26 (75331106)
+```
