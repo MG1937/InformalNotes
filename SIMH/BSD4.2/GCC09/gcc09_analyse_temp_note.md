@@ -248,9 +248,71 @@ DEF_RTL_EXPR(SET, "set", "ee")
 
 (set (reg:SI 16) (const_int 6))
 ```
-那么现在再去观察除了insn以外的其它RTX就很好理解了, 例如此例中set RTX的RTL形式, rtl.def给出定义解释是, 此RTX用于将操作数2的值赋值给操作数1, 操作数2很好理解, 是常量6, 其RTX Code为const_int, 操作数1是reg RTX Code, GCC官方文档的"Machine Modes"章节阐述了reg的:SI后缀代表SImode, 用于表示4字节的int类型寄存器, 此寄存器编号为16.  
+那么现在再去观察除了insn以外的其它RTX就很好理解了, 例如此例中作为指令具体操作的set RTX的RTL形式, rtl.def给出定义解释是, 此RTX用于将操作数2的值赋值给操作数1, 操作数2很好理解, 是常量6, 其RTX Code为const_int, 操作数1是reg RTX Code, GCC官方文档的"Machine Modes"章节阐述了reg的:SI后缀代表SImode, 用于表示4字节的int类型寄存器, 此寄存器编号为16.  
 
 最终, 这整个insn的RTL可被解读为: 一个指令insn RTX Code, 其当前下标为3, 与其相连的前驱指令下标为2, 后继指令下标为4, 该指令的具体操作为将常量值6赋值给编号为16的4字节Int类型寄存器.  
 
 有关RTL的更详细解读, 可见GCC基本抽象'13课件的第18页.  
 
+## 机器描述
+目前我们已经能够很容易地解读RTL, 但我们还没搞明白编译器是如何根据RTL生成对应的机器汇编的, 这一部分涉及另一个概念: **机器描述**. GCC官方文档对此部分的阐述较为详细, 文档提及, RTL转换机器汇编的过程通常是与对应机器描述文件.md内的指令模板有关的, 由于VAX780计算机对应的机器描述文件为vax.md, 下文均以此标准为例. 文档链接如下:  
+https://gcc.gnu.org/onlinedocs/gccint/Machine-Desc.html  
+
+```cpp
+/* Appears only in machine descriptions.
+   Defines the pattern for one kind of instruction.
+   Operand:
+   0: names this instruction.
+   If the name is the null string, the instruction is in the
+   machine description just to be recognized, and will never be emitted by
+   the tree to rtl expander.
+   1: is the pattern.
+   2: is currently not used.
+   3: is the action to execute if this pattern is matched.
+      If this assembler code template starts with a * if is a fragment of
+      C code to run to decide on a template to use.  Otherwise, it is the
+      template to use.
+   */
+DEF_RTL_EXPR(DEFINE_INSN, "define_insn", "sEss")
+
+(define_insn "movsi"
+  [(set (match_operand:SI 0 "general_operand" "=g")
+	(match_operand:SI 1 "general_operand" "g"))]
+  ""
+  "*
+{ if (operands[1] == const1_rtx
+      && GET_MODE (REG_NOTES (insn)) == (enum machine_mode) REG_WAS_0)
+    return \"incl %0\";
+  if (GET_CODE (operands[1]) == SYMBOL_REF || GET_CODE (operands[1]) == CONST)
+    {
+      if (push_operand (operands[0], SImode))
+	return \"pushab %a1\";
+      return \"movab %a1,%0\";
+    }
+  if (operands[1] == const0_rtx)
+    return \"clrl %0\";
+  if (GET_CODE (operands[1]) == CONST_INT
+      && (unsigned) INTVAL (operands[1]) >= 64)
+    {
+      int i = INTVAL (operands[1]);
+      if ((unsigned)(-i) < 64)
+	{
+	  operands[1] = gen_rtx (CONST_INT, VOIDmode, -i);
+	  return \"mnegl %1,%0\";
+	}
+      if ((unsigned)i < 0x100)
+	return \"movzbl %1,%0\";
+      if (i >= -0x80 && i < 0)
+	return \"cvtbl %1,%0\";
+      if ((unsigned)i < 0x10000)
+	return \"movzwl %1,%0\";
+      if (i >= -0x8000 && i < 0)
+	return \"cvtwl %1,%0\";
+    }
+  if (push_operand (operands[0], SImode))
+    return \"pushl %1\";
+  return \"movl %1,%0\";
+}")
+```
+同样以前文GCC RTL中提供的insn样例为例子, 此insn RTX最终会被编译器解析为VAX机器汇编`movl $6,r0`, 为了理解这一过程, 首先查看vax.md中有关movl指令的机器描述, 唯一匹配到的机器描述为"movsi", 具体定义如上(有关define_insn的RTX定义不再赘述, 请自行解读, 相关GCC文档位于[此处(Example of define_insn)](https://gcc.gnu.org/onlinedocs/gcc-3.3/gccint/Example.html#Example)).  
+显然, 前面提到的insn RTX的指令具体操作与movsi指令模板匹配. 编译器通过执行该机器描述中的汇编代码模板部分, 返回了机器汇编字符串"movl %1,%0". 随后, 经过寄存器处理操作, 最终解析为之前提到的机器汇编指令.
