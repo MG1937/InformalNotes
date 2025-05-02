@@ -194,4 +194,63 @@ ln cccp cpp
 同时需要注意, md这个文件是由gcc0.9源码内对应架构的.md后缀文件链接而来, 例如VAX架构下需要执行`ln -s vax.md md`.  
 相关的编译前提细节均在此资源内有描述: https://gist.github.com/olegslavkin/2966ae0580873f57e46fb38255e82db3  
 
+## GCC RTL
+20250502  
+为什么要研究RTL? 在迁移GCC09架构从VAX至X86-64的工作中(此工作详见另一份草案), debug指令生成的过程需要频繁通过gdb访问`rtl->fld(rtunion)`结构以及emit-rtl.c源码文件, 并且整个过程与RTX/RTL概念有多次交集, 因此, 为了方便后续的GCC编译过程研究, 有必要先对RTL进行系统性认知与学习. 如下印度孟买理工学院提供的CS715课件, Uday Khedker在Introduction to RTL的第八页明确提到机器汇编生成前的一个环节是RTL表示优化, 这进一步证明了两者的密切关联.  
+https://www.cse.iitb.ac.in/~uday/courses/cs715-09/gcc-rtl.pdf  
+
+其它有关RTL的资料如下:  
+* GCC官方文档 RTL Representation: https://gcc.gnu.org/onlinedocs/gcc-3.3/gccint/RTL.html  
+* 简述RTL表示语法的台湾Blog, 简明扼要地描述了RTL的关键元素: https://kitoslab.blogspot.com/2012/06/gcc-rtl-insn.html  
+* HackMD文档 GCC Internals - RTL Insn: https://hackmd.io/@hauhsu/ryCc8GBW1l?utm_source=preview-mode&utm_medium=rec  
+* GCC基本抽象'13 印度孟买理工课件: https://web.archive.org/web/20220308075642/http://www.cse.iitb.ac.in/grc/gcc-workshop-13/downloads/slides/Day3/gccw13-rtl-intro.pdf  
+
+下面以GCC0.9的`cc1 -dc`命令输出的.combine文件为例, 此文件包含.c源码经过编译器前端解析后产生的RTL表达式, 下面是源码`int a = 6;`对应的RTL形式.
+```
+(insn 3 2 4 (set (reg:SI 16)
+       (const_int 6)) -1 (nil)
+   (nil))
+```
+RTL的语法形式参考了Lisp语言, 在分析上面的RTL前, 需要对RTL的一些基本概念进行了解. 首先是RTX Code, 其可以被理解为RTL的基本单元, GCC官方文档没有非常详细地介绍过RTX, 其概念在文档的大多数内容中是隐含的, 但CS715课件的第42页记录了RTX的详细实现, RTX通常由项目代码内rtl.def文件中的DEF_RTL_EXPR宏进行定义, 其由rtl.c/.h文件进行引用以初始化RTX的各项元素, 下面是GCC0.9对于RTX Code "insn"的定义:  
+```cpp
+/* An instruction that cannot jump.  */
+DEF_RTL_EXPR(INSN, "insn", "iuueiee")
+```
+该宏定义中最重要的一项应当是RTX Format(格式), 也就是字符串"iuueiee", 格式定义了RTX Code其操作数的基本结构, 而关于格式的含义, 在GCC官方文档的"RTL Classes and Formats"章节均有释义. 格式中的每个字符均代表一种类型, 此例中, i代表整数类型, u代表指向其它RTX的指针, e代表另一个RTL表达式. 此外, 格式的每个类型字符的位置与最终RTX以RTL形式呈现时的结构是相互对应的, 这一点在GCC官方文档内也未有提及, 同样是隐含信息. 因此, 此例中的RTL应按照如下形式进行解析:
+```
+insn format "iuueiee"
+(insn ... ) => INSN RTX Code
+3 => i(Int)
+2 =>  u(RTX Pointer)
+4 => u(RTX Pointer)
+(set (reg:SI 16) (const_int 6)) => e(RTX Expression)
+-1 => i(Int)
+(nil) => e(RTX Expression)
+(nil) => e(RTX Expression)
+```
+现在, 我们知道了如何按照格式字符串对RTL进行解析, 但我们仍不知道每个格式类型的对应含义, GCC文档的"Insns"章节阐述了insn RTX Code的解析规范, 首先, 第一个i通常代表当前RTX的位置下标, 例如此例insn的下标位3, 第二个与第三个u代表指向其它下标的RTX指针, 文档描述为链接此insn的前驱以及后继insn, 这意味着insn RTX Code类似链表结构, 第四个e代表指令的具体操作, set insn RTX通常代表其操作数间的赋值操作, 此处暂时不关注, 后三项为代码的注释信息, 我们同样不关注.  
+```cpp
+#define INSN_UID(INSN)  ((INSN)->fld[0].rtint)
+#define PREV_INSN(INSN) ((INSN)->fld[1].rtx)
+#define NEXT_INSN(INSN) ((INSN)->fld[2].rtx)
+...
+```
+rtl.h源码文件中的宏定义是对RTX格式解析规范的具体实现, 例如用于获取insn位置下标的宏定义`INSN_UID`是通过访问rtx结构的fld数组实现的, 获取前驱insn RTX Code的宏`PREV_INSN`的实现也同样类似, 不同的是不同的宏使用了不同的下标访问fld数组, 这些下标与RTX格式中每个字符的位置直接关联, 例如代表前驱insn的u属于insn RTX格式中的第二个字符, 那么对应宏访问fld的下标则是1, 显然这符合直觉, 这也说明了为什么debug指令生成过程中需要gdb频繁访问rtx->fld数组中的联合体.  
+
+```
+/* Assignment.
+   Operand 1 is the location (REG, MEM, PC, CC0 or whatever) assigned to.
+   Operand 2 is the value stored there.
+   ALL assignment must use SET.
+   Instructions that do multiple assignments must use multiple SET,
+   under PARALLEL.  */
+DEF_RTL_EXPR(SET, "set", "ee")
+
+(set (reg:SI 16) (const_int 6))
+```
+那么现在再去观察除了insn以外的其它RTX就很好理解了, 例如此例中set RTX的RTL形式, rtl.def给出定义解释是, 此RTX用于将操作数2的值赋值给操作数1, 操作数2很好理解, 是常量6, 其RTX Code为const_int, 操作数1是reg RTX Code, GCC官方文档的"Machine Modes"章节阐述了reg的:SI后缀代表SImode, 用于表示4字节的int类型寄存器, 此寄存器编号为16.  
+
+最终, 这整个insn的RTL可被解读为: 一个指令insn RTX Code, 其当前下标为3, 与其相连的前驱指令下标为2, 后继指令下标为4, 该指令的具体操作为将常量值6赋值给编号为16的4字节Int类型寄存器.  
+
+有关RTL的更详细解读, 可见GCC基本抽象'13课件的第18页.  
 
