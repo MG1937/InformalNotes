@@ -6,6 +6,7 @@
 1. AndroidStudio SDK Manager -> SDK Tools -> NDK download   
 2. SDK directory -> lldb-server   
 3. SDK directory -> lldb.cmd   
+调试初始化配置: https://iree.dev/developers/debugging/android-with-lldb/  
 
 ## Module search
 ```
@@ -65,3 +66,10 @@ Breakpoint 4: where = libgui.so`android::gui::BpWindowInfosPublisher::ackWindowI
     frame #6: 0x000000773ba899b0 libbinder.so`android::PoolThread::threadLoop() - 18446743561607538255
 ```
 
+## Process Handle
+`process handle`命令允许LLDB处理系统产生的信号, 相对于前文使用`target stop-hook`命令不加区分信号地对所有挂起进行处理, 此命令拥有更细的处理粒度, 不过其只能用于指定是否让调试器在某些信号发生时挂起, 不过也足以应付大部分让人头疼的预期外挂起了.  
+```
+process handle --pass true --stop false --notify true SIGSEGV
+process handle --pass true --stop false --notify true SIGBUS
+```
+示例命令来源: https://stackoverflow.com/questions/52377562/how-do-you-create-a-lldb-script-to-ignore-sigsegv-and-sigbus
