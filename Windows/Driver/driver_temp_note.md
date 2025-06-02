@@ -28,7 +28,16 @@
 
 命令:
 * driverquery: MSDN文档中提及的驱动查询命令
-    * 可以直观地查询到minifilter相关驱动 FltMgr
+    - 可以直观地查询到minifilter相关驱动 FltMgr
+* bcdedit
+    - bcdedit /set testsigning on 关闭驱动签名验证
+* sc
+    - sc create NAME type=kernel binpath=/path/to/driver.sys 创建内核驱动服务
+    - sc start NAME 运行驱动服务, 同时触发驱动DriverEntry入口
+    - sc stop NAME 停止驱动服务
+    - sc delete NAME 卸载驱动服务
+* pnputil
+    - 可以用于安装驱动, 但不会触发驱动DriverEntry入口, 仅有与驱动相关的设备插入时才会触发入口
 
 资源:  
 1. 驱动开发手册
