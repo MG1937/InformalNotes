@@ -138,7 +138,11 @@ $$\frac{\partial L}{\partial w\_1} = \underbrace{(a\_2 - y)}\_{\text{L 对 a2}} 
 
 ![](7.png)  
 **前向传播算法**  
-$$\begin{aligned} &\text{Forward Pass}(\text{Weights List}, X\_1 = \text{Function Input}): \\ &\quad \text{for } i = 2 \text{ to } m: \\ &\quad \quad X\_i = W\_{i-1, i} \cdot X\_{i-1} \\ &\quad \text{return } X\_m \end{aligned} $$  
+
+```math
+\begin{aligned} &\text{Forward Pass}(\text{Weights List}, X\_1 = \text{Function Input}): \\ &\quad \text{for } i = 2 \text{ to } m: \\ &\quad \quad X\_i = W\_{i-1, i} \cdot X\_{i-1} \\ &\quad \text{return } X\_m \end{aligned}
+```
+
 **隐藏层计算** $$H\_i = g \left( \[w\_i^{(1)}\]^T x + b\_i^{(1)} \right) $$  
 **输出层结果** $$f(x, w) = g \left( \[w^{(2)}\]^T H + b^{(2)} \right) $$  
 
