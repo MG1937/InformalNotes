@@ -4,24 +4,24 @@
 
 ### 微分与偏导
 
-**一元函数** $$y = f(x $$  
+**一元函数** $$y = f(x) $$  
 
 | 概念 | 符号 | 定义 | 结果类型 |
 | --- | --- | --- | --- |
-| **导数** | $$f'(x $$ 或 $$\frac{dy}{dx $$ | $$\displaystyle\lim\_{\Delta x \to 0}\frac{f(x+\Delta x)-f(x)}{\Delta x $$ | 函数/数值 |
-| **微分** | $$d $$ | $$dy = f'(x)d $$ | 无穷小量（含$$dx $$） |
-| **自变量微分** | $$d $$ | 任意给定的无穷小量 | 无穷小量 |
+| **导数** | $$f'(x) $$ 或 $$\frac{dy}{dx} $$ | $$\displaystyle\lim\_{\Delta x \to 0}\frac{f(x+\Delta x)-f(x)}{\Delta x} $$ | 函数/数值 |
+| **微分** | $$dy $$ | $$dy = f'(x)dx $$ | 无穷小量（含$$dx $$） |
+| **自变量微分** | $$dx $$ | 任意给定的无穷小量 | 无穷小量 |
 
-关系：$$\frac{dy}{dx} = f'(x) \Leftrightarrow dy = f'(x)d $$  
+关系：$$\frac{dy}{dx} = f'(x) \Leftrightarrow dy = f'(x)dx $$  
 <br>  
 
-**多元函数** $$z = f(x, y $$  
+**多元函数** $$z = f(x, y) $$  
 
 | 概念 | 符号 | 定义 | 几何意义 |
 | --- | --- | --- | --- |
-| **偏导数** | $$\frac{\partial f}{\partial x $$ | $$\displaystyle\lim\_{\Delta x \to 0}\frac{f(x+\Delta x,y)-f(x,y)}{\Delta x $$ | 沿 $$$$ 方向切线斜率 |
-| **偏导数** | $$\frac{\partial f}{\partial y $$ | $$\displaystyle\lim\_{\Delta y \to 0}\frac{f(x,y+\Delta y)-f(x,y)}{\Delta y $$ | 沿 $$$$ 方向切线斜率 |
-| **全微分** | $$d $$ 或 $$d $$ | $$df = \frac{\partial f}{\partial x}dx + \frac{\partial f}{\partial y}d $$ | 切平面上的增量 |
+| **偏导数** | $$\frac{\partial f}{\partial x} $$ | $$\displaystyle\lim\_{\Delta x \to 0}\frac{f(x+\Delta x,y)-f(x,y)}{\Delta x} $$ | 沿 $$x $$ 方向切线斜率 |
+| **偏导数** | $$\frac{\partial f}{\partial y} $$ | $$\displaystyle\lim\_{\Delta y \to 0}\frac{f(x,y+\Delta y)-f(x,y)}{\Delta y} $$ | 沿 $$y $$ 方向切线斜率 |
+| **全微分** | $$df $$ 或 $$dz $$ | $$df = \frac{\partial f}{\partial x}dx + \frac{\partial f}{\partial y}dy $$ | 切平面上的增量 |
 
 区分  
 
@@ -29,19 +29,20 @@
 | --- | --- |
 | 导数 = 微分 | **否**。导数是变化率，微分是增量 |
 | 偏微分 = 偏导数 | **否**。偏导数是斜率，"偏微分"非标准术语 |
-| $$d $$ 是算出来的 | **否**。$$dx $$是自变量，人为给定 |
-| $$f(x)d $$ 是微分 | **否**。$$f(x)dx $$是积分元，$$f'(x)dx $$才是微分 |
+| $$dx $$ 是算出来的 | **否**。$$dx $$是自变量，人为给定 |
+| $$f(x)dx $$ 是微分 | **否**。$$f(x)dx $$是积分元，$$f'(x)dx $$才是微分 |
 
-### **梯度场与梯度下降**
+### **梯度****场与****梯度下降**
 
 | 概念 | 符号 | 定义 | 几何意义 |
 | --- | --- | --- | --- |
-| **梯度** | $$\nabla $$ 或 $$\text{grad } $$ | $$\nabla f = \left( \frac{\partial f}{\partial x\_1}, \frac{\partial f}{\partial x\_2}, \dots, \frac{\partial f}{\partial x\_n} \right)^\to $$ | 指向函数值增长最快的方向，其大小（模长）为该方向的最大变化率。 |\
+| **梯度** | $$\nabla f $$ 或 $$\text{grad } f $$ | $$\nabla f = \left( \frac{\partial f}{\partial x\_1}, \frac{\partial f}{\partial x\_2}, \dots, \frac{\partial f}{\partial x\_n} \right)^\top $$ | 指向函数值增长最快的方向，其大小（模长）为该方向的最大变化率。 |\
 ||
-| **梯度****场** | $$\mathbf{F} = \nabla $$ | $$\mathbf{F}(\mathbf{x}) = \left\langle \frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}, \dots \right\rangl $$ | 在定义域内每一点分配一个梯度向量，形成的矢量簇地图，描述整体坡度分布。 |
-| **正交****性** | $$\nabla f \perp \text{Level Set $$ | $$\nabla f \cdot d\mathbf{r} = $$ （其中 $$d\mathbf{r $$ 为等高线切向） | 梯度向量处处垂直于等高线或等值面；即从一处海拔跨越到另一处海拔的最短捷径。 |
+| **梯度****场** | $$\mathbf{F} = \nabla f $$ | $$\mathbf{F}(\mathbf{x}) = \left\langle \frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}, \dots \right\rangle $$ | 在定义域内每一点分配一个梯度向量，形成的矢量簇地图，描述整体坡度分布。 |
+| **正交****性** | $$\nabla f \perp \text{Level Set} $$ | $$\nabla f \cdot d\mathbf{r} = 0 $$ （其中 $$d\mathbf{r} $$ 为等高线切向） | 梯度向量处处垂直于等高线或等值面；即从一处海拔跨越到另一处海拔的最短捷径。 |\
+|||
 
-![](0.png)![](1.png)  
+![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=NjljNTk3YzFhYjY3MGNlODQyZjcyZWM2MDliMjc1MTBfcEhUOUNMR0pnZUlOdzVuc1kyMzQ4UHQydGNGcTNnbVlfVG9rZW46R043VmJtUEV4b1FJaER4UW9aVWM3a1labkFKXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=NjY1NjA3NTA0NTk2YTI4MmVkMDBlODYzMTlkZTRmOWRfek9EaXltdVE2OFZFQlV0RjZHZUhZY25XcnhPbHdKNnlfVG9rZW46S2lpa2Jzb0Zrb28zb2d4czBkUmNtOTNFbkhjXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)  
 
 <br>  
 
@@ -50,43 +51,43 @@
 第 0 步：前向传播结束  
 在求导前，必须锁定这些中间变量的值：  
 
-- $$z\_1 = w\_1 x + b\_ $$  
+- $$z\_1 = w\_1 x + b\_1 $$  
 	
-- $$a\_1 = \sigma(z\_1 $$  
+- $$a\_1 = \sigma(z\_1) $$  
 	
-- $$z\_2 = w\_2 a\_1 + b\_ $$  
+- $$z\_2 = w\_2 a\_1 + b\_2 $$  
 	
-- $$a\_2 = \sigma(z\_2 $$  
+- $$a\_2 = \sigma(z\_2) $$  
 	
-- $$L = \frac{1}{2}(a\_2 - y)^ $$  
+- $$L = \frac{1}{2}(a\_2 - y)^2 $$  
 	
 
 第 1 步：输出层（第 2 层）误差项计算  
-计算 $$$$ 对输出层“源头” $$z\_ $$ 的总偏导（记为 $$\delta\_2 $$）：  
+计算 $$L $$ 对输出层“源头” $$z\_2 $$ 的总偏导（记为 $$\delta\_2 $$）：  
 $$\delta\_2 = \frac{\partial L}{\partial a\_2} \cdot \frac{\partial a\_2}{\partial z\_2} = (a\_2 - y) \cdot \sigma'(z\_2) $$  
 <br>  
 
 第 2 步：输出层（第 2 层）参数梯度提取  
-利用 $$\delta\_ $$ 算出该层 $$$$ 和 $$$$ 的分量：  
+利用 $$\delta\_2 $$ 算出该层 $$w $$ 和 $$b $$ 的分量：  
 
-- $$\frac{\partial L}{\partial w\_2} = \delta\_2 \cdot a\_ $$  
+- $$\frac{\partial L}{\partial w\_2} = \delta\_2 \cdot a\_1 $$  
 	
-- $$\frac{\partial L}{\partial b\_2} = \delta\_2 \cdot $$  
+- $$\frac{\partial L}{\partial b\_2} = \delta\_2 \cdot 1 $$  
 	
 
 <br>  
 
 第 3 步：隐藏层（第 1 层）误差项计算  
-利用链式法则穿过第 2 层，计算 $$$$ 对 $$z\_ $$ 的总偏导（记为 $\delta\_1$）：  
+利用链式法则穿过第 2 层，计算 $$L $$ 对 $$z\_1 $$ 的总偏导（记为 $$\delta\_1 $$）：  
 $$\delta\_1 = \underbrace{\delta\_2}\_{\text{后层误差}} \cdot \underbrace{w\_2}\_{\text{层间权重}} \cdot \underbrace{\sigma'(z\_1)}\_{\text{本层激活导数}} $$  
 <br>  
 
 第 4 步：隐藏层（第 1 层）参数梯度提取  
-利用 $$\delta\_ $$ 算出该层 $$$$ 和 $$$$ 的分量：  
+利用 $$\delta\_1 $$ 算出该层 $$w $$ 和 $$b $$ 的分量：  
 
-- $$\frac{\partial L}{\partial w\_1} = \delta\_1 \cdot $$  
+- $$\frac{\partial L}{\partial w\_1} = \delta\_1 \cdot x $$  
 	
-- $$\frac{\partial L}{\partial b\_1} = \delta\_1 \cdot $$  
+- $$\frac{\partial L}{\partial b\_1} = \delta\_1 \cdot 1 $$  
 	
 
 <br>  
@@ -94,13 +95,13 @@ $$\delta\_1 = \underbrace{\delta\_2}\_{\text{后层误差}} \cdot \underbrace{w\
 第 5 步：参数执行更新（梯度下降）  
 将上述算出的四个梯度分量代入更新公式：  
 
-- $$w\_2 \leftarrow w\_2 - \eta \cdot \frac{\partial L}{\partial w\_2 $$  
+- $$w\_2 \leftarrow w\_2 - \eta \cdot \frac{\partial L}{\partial w\_2} $$  
 	
-- $$b\_2 \leftarrow b\_2 - \eta \cdot \frac{\partial L}{\partial b\_2 $$  
+- $$b\_2 \leftarrow b\_2 - \eta \cdot \frac{\partial L}{\partial b\_2} $$  
 	
-- $$w\_1 \leftarrow w\_1 - \eta \cdot \frac{\partial L}{\partial w\_1 $$  
+- $$w\_1 \leftarrow w\_1 - \eta \cdot \frac{\partial L}{\partial w\_1} $$  
 	
-- $$b\_1 \leftarrow b\_1 - \eta \cdot \frac{\partial L}{\partial b\_1 $$  
+- $$b\_1 \leftarrow b\_1 - \eta \cdot \frac{\partial L}{\partial b\_1} $$  
 	
 
 <br>  
@@ -115,9 +116,9 @@ $$\frac{\partial L}{\partial w\_1} = \underbrace{(a\_2 - y)}\_{\text{L 对 a2}} 
 
 > 本小节旨在全局性地了解机器学习，提前抛出一些概念，引入后续的学习  
 
-![](2.png)  
+![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=YWVkNzUyMjhkMjE0NzI3MWZlNTY3ZmUxMmQ1MGRiYjRfNGxkMkRCN0twMXZ3TUNSYjM4M05jNzRRQTdPWG85TkFfVG9rZW46Rk5BcWI5ZXBUb1p3Ymh4QndRamNiaG9QbmlmXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)  
 几个基本的神经网络类型，SNN是最基础的神经网络类型，其中RNN与LLM关系最为密切，Transformer作为LLM最重要的基座，它抛弃了RNN的递归循环逻辑，转而采用了CNN的大规模并行计算范式。但如果要快速了解LLM原理，针对RNN内自回归概念的学习需要占一些比重，针对Transformer的学习则必不可少。  
-![](3.png)  
+![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=ZDUyMTFjOTQzNWNkOTEwYWE0ODM4YWE0M2RiNTFlMGVfbVpibVpKZXRUckU3ZWRuYk1oS3J1bjJlS1llcks5UEdfVG9rZW46UEE4QWJIZ2VZb3VpZXJ4N0hzMGNURldKbnhkXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)  
 目前的深度学习领域（包括LLM）广泛采用的激活函数为ReLU及其变体，虽然Sigmoid函数在早期神经网络中占据优势，并曾被认为是模拟人脑神经元的最佳函数（平滑可导，缓慢激活），但随着神经网络的发展，Sigmoid的弊端逐渐显露，其中一个最直观的原因就是它在反向传播中存在严重的梯度消失问题。  
 可以想象如果训练过程需要从损失纠正隐藏层的权重和偏置项，就需要从后向前传播对损失函数某个自变量的偏导，问题在于如果选用Sigmoid为激活函数，根据其导数公式 $$\sigma'(x)=\sigma(x)(1-\sigma(x)) $$ 可知其结果的最大值仅为0.25，那么即使网络处于理想情况，最终逐层传播的偏导数结果每经过一层就要至少衰减75%，而在最糟糕情况，每层的入参会趋近于图像的两侧饱和区（接近0或者1），那么偏导结果会迅速趋近于0，无论何种情况，仅需传递数层，梯度就会基本消失，使得整个神经网络的权重更新完全停滞。  
 
@@ -125,40 +126,40 @@ $$\frac{\partial L}{\partial w\_1} = \underbrace{(a\_2 - y)}\_{\text{L 对 a2}} 
 
 > 本节旨在通过两种回归模式引出线性变换以及激活函数的用法，它们是神经元的基本单位  
 
-![](4.png)![](5.png)  
+![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=MjdmMzM0NWYwZjdhMDFjNDlmYTMwYmUxNzMwNDNkMWZfdXZLS0JHNTBQRWVWNzlZbWNrcnp0T0gyN01Kem9OWnRfVG9rZW46Qkx4M2J5d3hyb2ZtMDJ4emJaVGM0c0QzbnNoXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=NWRiOWFkY2M2NGU2NjY5OTdjMzQ5MWZiZGJkN2VhZDdfbGhHVTJZbTRuUFNNNUpjaWZ1d3gwMm50UVQxNE5wVk5fVG9rZW46WDNjRmJCbTA0b2tIN054aVA3ZWNqc0ZJbnVoXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)  
 
 在早期的机器学习中，为了拟合一片连续的数据，通常会使用到这样一个简单的线性回归模型尝试对后续数据进行预测，其公式为$$\hat{y}=wx^{T}+b $$，而后为了对样本集进行二分类或概率预测，产生了逻辑回归，其二分类模型同样基于该线性变换得来，公式为 $$\hat{y}=\sigma(wx+b)=\frac{1}{1+e^{-(wx+b)}} $$，通过控制线性变换，Sigmoid函数会将任意输入映射到(0,1)区间，从而预测样本为正样本或者负样本的概率。  
-![](6.png)  
+![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=MDNmYTZmYmFjNGE3MzdiN2E3ODA1YTc3MGZkNzM1M2JfS01IRGJDaGJ2dFB5YkNPOEJ3NEpjUWViTHR3Vm01Q0hfVG9rZW46RHN3VGJpMVZXb0tMUUN4cHdqTGNYMUhUbldkXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)  
 吴恩达的课件则对逻辑回归进行了更加形象的描述，想象你拥有一批样本集，在线性回归模型根本无法进行二分类的情况下，你转而采用了逻辑回归，并对样本集的所有特征进行了正负打标，使用Sigmoid函数对所有样本特征进行“解释”，理由之一是函数图像的两侧趋近于0或1，这很好地区分开了所有正负样本（可以看到课件右下角对函数性质的描述），其次，通过控制线性变换中的权重w与偏置b，则可以控制函数图像中间平滑部分的“斜率”，“方向”，或者对图像整体进行水平位移，这可以进一步切割正负样本，使每个样本点在函数上的映射都可以表达为该特征是正或负的概率，这样一来，你的目标就是尝试通过学习来不断调整线性变换，并最终拟合样本集，显然这很符合数学直觉。  
 
 ### 前向传播与反向传播
 
 > 在了解单个神经元的结构后，我们需要在本节引出如何“组装/使用”神经元，形成可训练可运行的网络  
 
-![](7.png)  
+![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=NWQ1OTVjZjA3ZjAzZGQ2MjBmMjAwYzEwMDY4N2ZhZWRfQWxURGdBMXNKZVJCQXVBb3V0dXI4dU8xbThJR3ZONkVfVG9rZW46V0Y5UmJmZXE5bzBWQnJ4Y2xWcWNtYmtlbmZjXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)  
 **前向传播****算法**  
 $$\begin{aligned} &\text{Forward Pass}(\text{Weights List}, X\_1 = \text{Function Input}): \\ &\quad \text{for } i = 2 \text{ to } m: \\ &\quad \quad X\_i = W\_{i-1, i} \cdot X\_{i-1} \\ &\quad \text{return } X\_m \end{aligned} $$  
 **隐藏层****计算** $$H\_i = g \left( \[w\_i^{(1)}\]^T x + b\_i^{(1)} \right) $$  
 **输出层****结果** $$f(x, w) = g \left( \[w^{(2)}\]^T H + b^{(2)} \right) $$  
 
 印度理工大学的CS217对前向传播进行了形象的描述，假设有一个已经训练好的神经网络，并且所有神经元都有恰当的权重与偏置，它们在理论上已经可以使输出函数逼近理想的目标函数，那么向该网络提供一些输入层入参就可以启动前向传播过程。首先隐藏层将取出上一层提供的结果向量，与本层的权重以及偏置进行加权求和，并使用激活函数进行非线性转化得到本层的结果向量，如此往复直至输出层最后进行一次加权求和以及激活函数计算，得到最终的结果（例如分类或者预测）。  
-![](8.png)![](9.png)  
+![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=OTcwODk2MDZhM2JjYTIxMTg5N2UzMjI0YzU5ODljZDJfdXJIWjM1eGh2N01yV3c2R2F2alBKUlk4RzBvUWN6U2NfVG9rZW46SVVCTmJmOGxWbzdXZVd4NUFkYmNaUkZybjVkXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=NmI4NzNjNzc1ZTlkMGU3MzZhM2Y1YmQ5MDM4MDJkMzBfNDFUVDJJczNuTEZSbmZzMVM0aXNKSVlTZjR2WWp2dHNfVG9rZW46SmxEMGJWUVZvb1ZXOGR4R3dvTWNLV1JybmtlXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)  
 
 既然目前我们已经了解了前向传播以及机器学习的基础内容，那么就必定会引出一个问题，权重以及偏置到底该如何调整才能让输出函数尽可能逼近目标。我们显然不可能对多层神经元逐个手动调参，再执行前向传播反复观察拟合效果。一方面，人脑无法在高维张量中精确评估单个神经元权重对最终预测结果的具体影响，另一方面，即便只对某个神经元的权重做微小调整，也可能彻底改变整个网络的预测函数。正因如此，反向传播技术才如此重要，它是模型训练时的绝不可缺少的核心步骤。  
 以上两份课件来自CS231n的反向传播讲解，课件假设了一个两层神经网络，其预测函数为 $$f\_\theta(x) $$，损失函数为经典的交叉熵函数 $$\ell(P,Q) $$，而模型训练的目标就是要让 $$\ell(f\_\theta(X),y) $$得出的损失尽可能小（或者说在这个评价体系下尽可能拟合理想情况），那么在数学直觉上，如果要让预测结果$$f\_\theta $$尽可能落入损失函数的底部最小值，实际上就是在尝试通过$$\frac{\partial\ell}{\partial f\_\theta} $$评估损失函数特定位置的切面的变化率，以一种“可量化”的方式不断调整$$f\_\theta $$最终使得损失逼近最小值。  
-![](10.png)![](11.png)  
+![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=YTBiNzc1YWU4MDRiYzU3OTE4NGQzZTg4MWZhNGFjZTJfU0t5QjZ0Q3VVc1B3cFNkRzZhMmV5MTZnd0tNWUZKNlVfVG9rZW46TjVpNGJhcE1Eb3B5YVZ4OHdNcGN3WFRVbk1mXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=NTQ0ODkzNDg1Zjc3NjYwY2E4MzY4MjcyMTVhMzAyYTNfblhHQTE5MlBHd1dmQllPOTlNVWxXeDQxWmZyUVBodUxfVG9rZW46U3JadGIwV25Xb004Mk14UUdwb2NaMGl2bnpkXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)  
 
 我们将反向传播过程进行简化，并让交叉熵损失函数可以在三维空间中表示，假定在某一轮训练中，预测值$$f\_\theta $$落入空间中的随机位置，那么，通过损失函数偏微分结果不断调整预测函数入参，并逼近谷底最小值的过程就是梯度下降，如上图的黄色轨迹很直观地展示了这一过程。新的问题在于，该简化模型将预测函数本身视作一个可直接调整的值，但实际情况下$$f\_\theta $$的影响因素取决于函数展开后的所有神经元权重与偏置的总结果，因此我们实际上需要在每一轮反向传播中一次性微调所有神经元的权重与偏置，当然，直接对交叉熵复合函数的指定权重或偏置求导是非常困难的，但链式法则极大地化简了这一过程，它将复杂的求导过程从全局逐渐“缩放”到局部（例如对指定权重$$w $$求导： $$\frac{\partial \ell}{\partial w} = \frac{\partial \ell}{\partial f} \cdot \frac{\partial f}{\partial z} \cdot \frac{\partial z}{\partial w} $$），从复杂的复合函数内抽离出特定权重或偏置的偏导以量化调整幅度，使得每一轮对逐层神经元进行微调是可行的，由于权重以及偏置的微调均依赖上一层神经元的求导结果，这个过程才被形象地称为“反向传播”。  
 
 ### 大规模向量计算
 
-![](12.png)![](13.png)  
+![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=ZDc1YjNlYjhhNmNkMmQ1YWY3YTU4ZTcxZGI5MzA3YWRfU2ZaY3VQWFBEUVZNb1NSb0dKWjhzOVVLNVdydHRRREdfVG9rZW46VklxNWJwVFhVb0FYRml4S0lTSWNYSExrbmllXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=YmFhOGUyMWQzODE2YTFjZDUwMzVkNGMzZDViNmVmNTdfYUw1aUpibTd0aUJKTkVUVTVHV2lOeWZaWGNweHljNkVfVG9rZW46UFp0eGJEenJzb2RGbDJ4TFFQSWNLNU1EbjhlXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)  
 
 吴恩达提到，大规模向量计算是机器学习中不可避免的部分，拥有快速计算的能力则对整个神经网络的运行与训练速度起到关键作用。其课件举了两个例子，假设有两个一百万分量的向量要计算点积，其一是利用循环逐步计算并装载计算结果，另一种是直接调用Numpy库的点积函数，结果显而易见，前者大约花费了数百毫秒，而后者仅仅使用了1毫秒左右的时间。但吴恩达没有进一步解释Numpy究竟使用了什么“魔法”来加速计算，因此以下内容为额外补充。  
-![](14.png)![](15.png)  
+![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=MmJjZTcyMThmYzMzMzgzNDRjMTE2ZmM4NWY4OTllZTFfUzIxRmF6TjFGM2FGc0FrV1ZralVodzIxRkxnOG41SE5fVG9rZW46T2k1RGJNSzFwb3NRNjR4amJUUmNPMlZqbklDXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=ZjhhNGU2NDg3ZDUwMTI5YzkxNGU0MjI2MDhiNGY3MGVfSXdnWjFCcFFtT3ZZTzd0aVc2SkI4QzZDa0IzUlNzalBfVG9rZW46VTlBRWJvRGtvb1doSHN4YWVESWNmbUlTbm5kXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)  
 
 事实上，Numpy之所以能实现大规模向量的高速计算，主要得益于现代CPU/GPU对SIMD（单指令，多数据操作）并行计算范式的支持。具体到x86平台（为了易于理解），Intel CPU实现的AVX指令集拓展引入了支持256位宽的SIMD寄存器YMM，根据Intel架构文档，相对于通用寄存器，YMM寄存器能够一次性容纳8个单精度浮点数；以拓展指令VFMADD213PS为例，根据架构文档中有关该指令的伪代码实现，操作位宽为256的情况下（VEX.256前缀编码被匹配）指令会并行处理8组每组32位宽长度的数据，这意味着CPU可以在单次指令执行内同时进行8组单精度浮点数的融合乘加运算。因此相比于通用寄存器逐个装载，逐个计算的方式，SIMD 指令一次性并行计算8个分量的效率显著更高；再结合CPU超标量架构（每时钟周期可发射多条 SIMD 指令），整体计算速度会大幅提升。  
-![](16.png)![](17.png)  
+![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=MTk1YjM3MGVkMWVjNmRiMjZkYmI0N2JiYTlhZWM4MWZfQU42Q3I5TlpJNjk2T3RRdkdVV2RvaWFhM3hQSkxnTElfVG9rZW46TmM3VWJ6VG5LbzZvYmR4QWVWd2NxaFNGbjJjXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=ZWFkNmY4Njk3OTZiOWNjN2JkNTJmNGYxNGNkMTNmODlfM1dyb1dhVUI5T0RobU1PeVNaZElNaDV0SVRYNVRhbVlfVG9rZW46SklsOWI0UFBib1ZPeTB4WURDOWNFR3ZibkhmXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)  
 
 再具体一些，以Numpy的点积函数dot为例，其内部的核心计算逻辑并非由纯Python实现，而是派发至C++层的BLAS库接口，假定Numpy根据编译环境绑定实现到OpenBLAS计算库，根据arraytypes.c.src模板内@name@\_dot接口的派发逻辑，多维数组的点积计算最终会调用以cblas\_为前缀的BLAS标准函数（如单精度点积对应cblas\_sdot）。其内部的sdot\_kernel内核函数会针对不同CPU指令集（SSE/AVX/AVX2）优化，大量使用 SIMD 指令并行计算，这是Numpy dot函数实现高速计算的核心原因之一。同时，Numpy会根据当前设备的指令集支持，自适应选择最优的 SIMD 指令实现，而非仅局限于Intel的SIMD支持。  
 
@@ -168,9 +169,9 @@ $$\begin{aligned} &\text{Forward Pass}(\text{Weights List}, X\_1 = \text{Functio
 
 ### 归一化与Softmax回归
 
-![](18.png)  
+![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=MDgyNDA3MGYyNTg5M2ZkN2QwN2NlZjZmNWEyMmM4NTBfb2dCejFkNGhKU0p1bVNrU050eTVleEJqaVVqbUV2ZzRfVG9rZW46VFllRGIwZHE5b0tPWXp4TkkzQWM5ZDVCbktoXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)  
 Softmax函数是深度学习中典型的多分类概率预测函数，它能将输出映射为满足概率空间约束的归一化概率。不过，要理解模型训练的稳定性，我们需要先了解输入特征归一化的意义，以及归一化本身的数学动机。吴恩达首先例举了带有两个特征的向量$$X $$，规定其特征分量 $$X\_1 $$的样本分布范围很广，例如为0~1000，分量 $$X\_2 $$的样本分布范围则很窄，例如0~1，那么在这类非归一化样本上套用代价函数时，其函数的三维图像会变得非常“狭窄”，这将导致函数梯度场变得“难以”处理，每次反向传播都必须设置一个极其小的学习率来防止震荡或无法收敛的情况发生，并且需要更多的迭代步骤才有可能最终找到最小值，总的来说，如果使用非归一化的样本，模型的训练效率会大幅降低。  
-![](19.png)  
+![](https://bytedance.larkoffice.com/space/api/box/stream/download/asynccode/?code=MWQyNGIxZjBlYzdhNmQwMTA4YTVmMGFlMTk5NWExNjhfRUwzdUliRGg4dW9VcXJLNnllWWd1ZTVqMkRPRWpCSTNfVG9rZW46TFU0R2J1REhYb1Z2Ym14ajRBbmNTcFd3bk1kXzE3NzE4NjY5MTg6MTc3MTg3MDUxOF9WNA&add_watermark=true&scene_type=CCM)  
 <br>  
 
 # 参考资料
